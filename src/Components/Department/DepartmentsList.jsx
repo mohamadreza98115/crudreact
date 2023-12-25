@@ -2,6 +2,7 @@ import AddNewDepartment from "./AddNewDepartment.jsx";
 
 const DepartmentsList = () => {
     const departments = [{
+        id: 1,
         name: "Computers",
         description: "sldkjfklsdjfklsdjfkljsdlkfjsdlkjf",
         price: 1100,

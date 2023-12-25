@@ -35,7 +35,8 @@ export default function AddNewDepartment() {
     const cancelButtonRef = useRef(null)
 
     const onSubmit = async (values) => {
-        console.log(values)
+        console.log(values);
+        //     Call backend service to save data
     }
 
     return (
@@ -101,7 +102,7 @@ export default function AddNewDepartment() {
                                                                                 type="text"
                                                                                 {...field}
                                                                                 id="name"
-                                                                                className={className(`block w-full min-w-[20rem] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.name && input_error_classes)}
+                                                                                className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.name && input_error_classes)}
                                                                             />
                                                                             {errors.name && <div
                                                                                 className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -130,7 +131,7 @@ export default function AddNewDepartment() {
                                                                     type="number"
                                                                     {...register("price", {valueAsNumber: true})}
                                                                     id="price"
-                                                                    className={className(`block w-full min-w-[20rem] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.price && input_error_classes)}
+                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.price && input_error_classes)}
                                                                 />
                                                                 {errors.price && <div
                                                                     className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -159,7 +160,7 @@ export default function AddNewDepartment() {
                                                                                     type="text"
                                                                                     {...field}
                                                                                     id="brand"
-                                                                                    className={className(`block w-full min-w-[20rem] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.brand && input_error_classes)}
+                                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.brand && input_error_classes)}
                                                                                 />
                                                                                 {errors.brand && <div
                                                                                     className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -187,7 +188,7 @@ export default function AddNewDepartment() {
                                                                     type="number"
                                                                     {...register("stock", {valueAsNumber: true})}
                                                                     id="stock"
-                                                                    className={className(`block w-full min-w-[20rem] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.brand && input_error_classes)}
+                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.brand && input_error_classes)}
                                                                 />
                                                                 {errors.stock && <div
                                                                     className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -216,7 +217,7 @@ export default function AddNewDepartment() {
                                                                                     type="url"
                                                                                     {...field}
                                                                                     id="thumbnail"
-                                                                                    className={className(`block w-full min-w-[20rem] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.thumbnail && input_error_classes)}
+                                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.thumbnail && input_error_classes)}
                                                                                 />
                                                                                 {errors.thumbnail && <div
                                                                                     className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
