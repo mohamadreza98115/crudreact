@@ -9,6 +9,7 @@ import DepartmentsList from "./Components/Department/DepartmentsList.jsx";
 import EmployeeDetail from "./Components/employee/EmployeeDetail.jsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import DepartmentDetail from "./Components/Department/DepartmentDetail.jsx";
+import Dashborad from "./Components/Dashborad.jsx";
 
 const client = new QueryClient();
 
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
         element: <App/>,
         errorElement: <ErrorPage/>,
         children: [
+            {
+                path: "/dashboard",
+                element: <Dashborad/>
+            },
             {
                 path: "/employees",
                 element: <EmployeesList/>,
