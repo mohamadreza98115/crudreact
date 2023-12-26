@@ -5,7 +5,6 @@ import {useQuery} from "@tanstack/react-query";
 const fetchDepartments = () => {
     return axios.get("http://localhost:8080/api/department").then(res => res.data)
 }
-
 const DepartmentsList = () => {
     const {data, isLoading} = useQuery({queryKey: ["fetchDepartments"], queryFn: fetchDepartments})
     const departments = [
@@ -18,8 +17,9 @@ const DepartmentsList = () => {
             name: "Mechanical"
         }
     ];
-    // if (isLoading) return <h5 className={"p-4"}>Loading...</h5>
-    console.log(isLoading, data)
+    if (isLoading) return <h5 className={"p-4"}>Loading...</h5>
+    // first check data is existed or not
+    console.log(data)
     return (
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">

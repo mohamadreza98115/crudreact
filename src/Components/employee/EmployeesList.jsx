@@ -9,6 +9,8 @@ const fetchAllEmployees = async () => {
 
 const EmployeesList = () => {
     const {data, isLoading} = useQuery({queryKey: ["fetch employees"], queryFn: fetchAllEmployees})
+
+    // static data
     // eslint-disable-next-line no-unused-vars
     const employees = [{
         id: 1,
@@ -16,8 +18,10 @@ const EmployeesList = () => {
         lastname: "ahmadi",
         email: "ahmad@gmail.com",
     }];
-    console.log(isLoading)
-    // if (isLoading) return <h5 className={"p-4 text-blue-600"}>Loading...</h5>
+
+    // first log data to check if data exist or not
+    console.log(data)
+    if (isLoading) return <h5 className={"p-4 text-blue-600"}>Loading...</h5>
     return (
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">

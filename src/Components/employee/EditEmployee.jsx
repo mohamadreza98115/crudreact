@@ -43,7 +43,8 @@ const EditEmployee = () => {
         mutation.mutate(values);
 
     }
-    console.log(isLoading);
+    console.log(data)
+    if (isLoading) return <h5>Loading...</h5>
     if (mutation.isLoading) {
         return <h5 className={'p-4'}>Adding Employee...</h5>
     }
