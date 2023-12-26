@@ -1,21 +1,30 @@
 import AddNewEmployee from "./AddNewEmployee.jsx";
+import axios from "axios";
+import {useQuery} from "@tanstack/react-query";
 
+
+const fetchAllEmployees = async () => {
+    return axios.get("http://localhost:8080/api/employee").then(res => res.data);
+}
 
 const EmployeesList = () => {
+    const {data, isLoading} = useQuery({queryKey: ["fetch employees"], queryFn: fetchAllEmployees})
+    // eslint-disable-next-line no-unused-vars
     const employees = [{
         id: 1,
-        name: "Ahmad",
-        description: "sldkjfklsdjfklsdjfkljsdlkfjsdlkjf",
-        price: 1100,
-        brand: "Apple",
+        firstname: "Ahmad",
+        lastname: "ahmadi",
+        email: "ahmad@gmail.com",
     }];
+    console.log(isLoading)
+    // if (isLoading) return <h5 className={"p-4 text-blue-600"}>Loading...</h5>
     return (
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
                     <h1 className="text-base font-semibold leading-6 text-gray-900">Employees</h1>
                     <p className="mt-2 text-sm text-gray-700">
-                        A list of all the employees in your system including their name, email, address and age.
+                        A list of all the employees in your system including their ID, Firstname,Lastname and email.
                     </p>
                 </div>
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -30,16 +39,16 @@ const EmployeesList = () => {
                             <tr>
                                 <th scope="col"
                                     className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                    Name
+                                    ID
                                 </th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                    Description
+                                    First Name
                                 </th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                    Price
+                                    Last Name
                                 </th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                    Brand
+                                    Email
                                 </th>
                                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                     <span className="sr-only">Edit</span>
@@ -47,34 +56,20 @@ const EmployeesList = () => {
                             </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 bg-white">
-                            {employees?.map((product) => (
-                                <tr key={product.id}>
-                                    <td className="whitespace-nowrap py-5 pl-3 pr-3 text-sm sm:pl-0">
-                                        <div className="flex items-center">
-                                            <div className="h-11 w-11 flex-shrink-0">
-                                                <img
-                                                    className="rounded-full h-11 w-11"
-                                                    src={product.thumbnail}
-                                                    alt="img"/>
-                                            </div>
-                                            <div className="ml-4">
-                                                <div
-                                                    className="font-medium text-gray-900">{product.name.substring(0, 15)}-
-                                                </div>
-                                            </div>
-                                        </div>
+                            {employees?.map((employee) => (
+                                <tr key={employee.id}>
+                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                                        <div className="text-gray-900">{employee.id}</div>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                        <div className="text-gray-900">{product.description.substring(0, 30)}...</div>
+                                        <div className={'text-gray-900'}>{employee.firstname}</div>
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                        <div className={'text-gray-900'}>${product.price}</div>
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{product.brand?.substring(0, 10)}</td>
+                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{employee.lastname}</td>
+                                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{employee.email}</td>
                                     <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                        <a href={`/employees/${product.id}`}
+                                        <a href={`/employees/${employee.id}`}
                                            className="text-indigo-600 hover:text-indigo-900">
-                                            Edit<span className="sr-only">, {product.name}</span>
+                                            Edit<span className="sr-only">, {employee.name}</span>
                                         </a>
                                     </td>
                                 </tr>

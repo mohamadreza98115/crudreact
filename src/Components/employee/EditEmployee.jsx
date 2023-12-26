@@ -4,16 +4,48 @@ import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from 'zod'
 import {zodResolver} from "@hookform/resolvers/zod";
+import axios from "axios";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {useParams} from "react-router-dom";
 
 const schema = z.object({
 //     Schema validation with zod
+    firstname: z.string().min(3),
+    lastname: z.string().min(3),
+    email: z.string().email()
 })
+
+const fetchEmployeeById = (id) => {
+    return axios.get(`http://localhost:8080/api/employee/${id}`).then(res => res.data);
+}
+
+
 const EditEmployee = () => {
     const [show, setShow] = useState(false);
-    const {register, handleSubmit, formState: {errors}} = useForm({resolver: zodResolver(schema)});
+    const [open, setOpen] = useState(false);
+    const {employeeId} = useParams();
+    const {data, isLoading} = useQuery({
+        queryFn: () => fetchEmployeeById(employeeId),
+        queryKey: ['fetchemployee', employeeId]
+    })
+    const mutation = useMutation({
+        mutationFn: (data) => {
+            return axios.post("http://localhost:8080/api/employee", data);
+        }
+    })
+    const {register, handleSubmit, formState: {errors}} = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: data
+    });
 
     const onSubmit = (values) => {
-        console.log(values)
+        console.log(values);
+        mutation.mutate(values);
+
+    }
+    console.log(isLoading);
+    if (mutation.isLoading) {
+        return <h5 className={'p-4'}>Adding Employee...</h5>
     }
     return (
         <div>
@@ -24,129 +56,70 @@ const EditEmployee = () => {
                         <div
                             className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
                             <div>
-                                <h2 className="text-base font-semibold leading-7">Product
+                                <h2 className="text-base font-semibold leading-7">Employee
                                     Information</h2>
                             </div>
 
                             <form className="md:col-span-2" onSubmit={handleSubmit(onSubmit)}>
                                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
-                                    <div className="col-span-full flex items-center gap-x-8">
-                                        <img
-                                            src={employee.image}
-                                            alt="p_pict"
-                                            width={96}
-                                            height={96}
-                                            className="h-24 w-24 flex-none rounded-lg object-cover"
-                                        />
-                                        <div className={'flex items-center'}>
-                                            <input
-                                                type="file"
-                                                className="rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold shadow-sm"
-
-                                            />
-                                            <p className="mt-2 text-xs leading-5">JPG, GIF or PNG. 1MB
-                                                max.</p>
-                                        </div>
-                                    </div>
 
                                     <div className="col-span-full">
-                                        <label htmlFor="name"
+                                        <label htmlFor="fName"
                                                className="block text-sm font-medium leading-6">
-                                            Name
+                                            First Name
                                         </label>
                                         <div className="mt-2">
                                             <input
-                                                {...register("name")}
-                                                id="name"
-                                                name="name"
+                                                {...register("firstname")}
+                                                id="fName"
                                                 type="text"
-                                                className="block w-full rounded-md py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                                                className="block w-full px-2 rounded-md py-1.5 shadow-sm ring-1 ring-inset ring-black focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             />
                                         </div>
-                                        {errors.name &&
+                                        {errors.firstname &&
                                             <p className="mt-2 text-sm text-red-600"
                                                id="email-error">
-                                                {errors.name.message}
+                                                {errors.firstname.message}
                                             </p>}
                                     </div>
 
                                     <div className="col-span-full">
-                                        <label htmlFor="brand"
+                                        <label htmlFor="lName"
                                                className="block text-sm font-medium leading-6">
-                                            Brand
+                                            Last Name
                                         </label>
                                         <div className="mt-2">
                                             <input
-                                                {...register("brand")}
-                                                id="brand"
+                                                {...register("lastname")}
+                                                id="lName"
                                                 type="text"
-                                                className="block w-full rounded-md py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                                                className="block w-full rounded-md px-2 py-1.5 shadow-sm ring-1 ring-inset ring-black focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             />
                                         </div>
-                                        {errors.brand &&
+                                        {errors.lastname &&
                                             <p className="mt-2 text-sm text-red-600"
                                                id="email-error">
-                                                {errors.brand.message}
+                                                {errors.lastname.message}
                                             </p>}
                                     </div>
 
                                     <div className="col-span-full">
-                                        <label htmlFor="stock"
+                                        <label htmlFor="email"
                                                className="block text-sm font-medium leading-6">
-                                            Stock
+                                            Email
                                         </label>
                                         <div className="mt-2">
                                             <input
-                                                {...register("stock", {valueAsNumber: true})}
-                                                id="stock"
-                                                type="number"
-                                                className="block w-full rounded-md py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                                                {...register("email",)}
+                                                id="email"
+                                                type="email"
+                                                className="block w-full rounded-md px-2 py-1.5 shadow-sm ring-1 ring-inset ring-black focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             />
                                         </div>
-                                        {errors.stock &&
+                                        {errors.email &&
                                             <p className="mt-2 text-sm text-red-600"
                                                id="email-error">
-                                                {errors.stock.message}
-                                            </p>}
-                                    </div>
-
-                                    <div className="col-span-full">
-                                        <label htmlFor="price"
-                                               className="block text-sm font-medium leading-6">
-                                            Price
-                                        </label>
-                                        <div className="mt-2">
-                                            <input
-                                                {...register("price", {valueAsNumber: true})}
-                                                id="price"
-                                                type="number"
-                                                className="block w-full rounded-md py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                            />
-                                        </div>
-                                        {errors.price &&
-                                            <p className="mt-2 text-sm text-red-600"
-                                               id="email-error">
-                                                {errors.price.message}
-                                            </p>}
-                                    </div>
-
-                                    <div className="col-span-full">
-                                        <label htmlFor="description"
-                                               className="block text-sm font-medium leading-6 text-gray-900">
-                                            Description
-                                        </label>
-                                        <div className="mt-2">
-                                            <textarea
-                                                id="description"
-                                                rows={3}
-                                                className={"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"}
-                                                {...register("description")}
-                                            />
-                                        </div>
-                                        {errors.description &&
-                                            <p className="mt-2 text-sm text-red-600"
-                                               id="email-error">
-                                                {errors.description.message}
+                                                {errors.email.message}
                                             </p>}
                                     </div>
 
@@ -166,11 +139,11 @@ const EditEmployee = () => {
                         <div
                             className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
                             <div>
-                                <h2 className="text-base font-semibold leading-7">Delete product</h2>
+                                <h2 className="text-base font-semibold leading-7">Delete employee</h2>
                                 <p className="mt-1 text-sm leading-6 text-gray-600">
-                                    No longer want to use this product? You can delete product here. This action
+                                    No longer want to use this employee? You can delete employee here. This action
                                     is not reversible.
-                                    All information related to this product will be deleted permanently.
+                                    All information related to this employee will be deleted permanently.
                                 </p>
                             </div>
 
@@ -179,9 +152,9 @@ const EditEmployee = () => {
                                     onClick={() => setOpen(true)}
                                     className="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400"
                                 >
-                                    Yes, delete product
+                                    Yes, delete employee
                                 </button>
-                                <DeleteEmployee id={employee.id} open={open} setOpen={setOpen}/>
+                                <DeleteEmployee id={data?.data?.id} open={open} setOpen={setOpen}/>
                             </div>
                         </div>
                     </div>

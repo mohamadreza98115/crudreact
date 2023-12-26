@@ -1,9 +1,15 @@
 import {Fragment, useRef} from "react";
 import {Transition, Dialog} from "@headlessui/react";
 import {ExclamationTriangleIcon} from "@heroicons/react/16/solid/index.js";
+import axios from "axios";
+import {useMutation} from "@tanstack/react-query";
+
 
 // eslint-disable-next-line react/prop-types
 const DeleteEmployee = ({id, open, setOpen}) => {
+    const deleteEmployee = useMutation((id) => {
+        return axios.delete(`http://localhost:8080/api/employee/${id}`);
+    })
     const cancelButtonRef = useRef(null)
     return (
         <Transition.Root show={open} as={Fragment}>
@@ -56,10 +62,7 @@ const DeleteEmployee = ({id, open, setOpen}) => {
                                     <button
                                         type="button"
                                         className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                                        onClick={async () => {
-                                            //     call backend to delete Employee
-                                            console.log(id)
-                                        }}
+                                        onClick={() => deleteEmployee.mutate(id)}
                                     >
                                         Delete
                                     </button>

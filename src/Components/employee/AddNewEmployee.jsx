@@ -6,38 +6,25 @@ import className from "clsx";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from 'zod'
 import SuccessAlert from "../SuccessAlert.jsx";
-
-const input_error_classes = "block w-full rounded-md border-0 py-1.5 pr-10 text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500 sm:text-sm sm:leading-6"
+import {input_error_classes} from "../constants.js";
+import axios from "axios";
 
 
 const schema = z.object({
-    name: z.string().min(3, "Name must contain at least 3 character(s)"),
-    description: z.string().min(30, "description must contain at least 30 character(s)"),
-    price: z.number().positive(),
-    brand: z.string(),
-    stock: z.number().positive(),
-    rating: z.number().optional(),
-    thumbnail: z.string().url(),
+    fName: z.string().min(3, "firstName must contain at least 3 character(s)"),
+    lName: z.string().min(3, "lastName must contain at least 3 character(s)"),
+    email: z.string().email(),
 })
 
 export default function AddNewEmployee() {
     const [open, setOpen] = useState(false);
     const [showAlert, setAlert] = useState(false);
     const {
-        register,
         control,
         handleSubmit,
         formState: {errors}
     } = useForm({
         resolver: zodResolver(schema),
-        defaultValues: {
-            name: '',
-            brand: "",
-            price: parseInt(""),
-            thumbnail: "",
-            description: "",
-            stock: 1
-        }
     });
 
     const cancelButtonRef = useRef(null)
@@ -45,6 +32,12 @@ export default function AddNewEmployee() {
     const onSubmit = async (values) => {
         console.log(values);
         //     Call backend api
+        axios.post("http://localhost:8080/api/employee", values).then(res => {
+            setAlert(true);
+            return res.data;
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     return (
@@ -98,152 +91,96 @@ export default function AddNewEmployee() {
                                                 </Dialog.Title>
                                                 <form onSubmit={handleSubmit(onSubmit)}>
                                                     <div className="mt-2">
-                                                        <Controller control={control} name={"name"}
+                                                        <Controller control={control} name={"fName"}
                                                                     render={({field}) => <div>
-                                                                        <label htmlFor="name"
+                                                                        <label htmlFor="fName"
                                                                                className="block text-sm font-medium leading-6 text-gray-900">
-                                                                            Name
+                                                                            First Name
                                                                         </label>
                                                                         <div
                                                                             className="relative mt-2 rounded-md shadow-sm">
                                                                             <input
                                                                                 type="text"
                                                                                 {...field}
-                                                                                id="name"
-                                                                                className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:outline-0 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.name && input_error_classes)}
+                                                                                id="fName"
+                                                                                className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:outline-0 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.fName && input_error_classes)}
                                                                             />
-                                                                            {errors.name && <div
+                                                                            {errors.fName && <div
                                                                                 className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                                                 <ExclamationCircleIcon
                                                                                     className="h-5 w-5 text-red-500"
                                                                                     aria-hidden="true"/>
                                                                             </div>}
                                                                         </div>
-                                                                        {errors.name &&
+                                                                        {errors.fName &&
                                                                             <p className="mt-2 text-sm text-red-600"
                                                                                id="email-error">
-                                                                                {errors.name.message}
+                                                                                {errors.fName.message}
                                                                             </p>}
                                                                     </div>}
                                                         />
 
-
-                                                        <div>
-                                                            <label htmlFor="price"
-                                                                   className="block text-sm font-medium leading-6 text-gray-900">
-                                                                Price
-                                                            </label>
-                                                            <div
-                                                                className="relative mt-2 rounded-md shadow-sm">
-                                                                <input
-                                                                    type="number"
-                                                                    {...register("price", {valueAsNumber: true})}
-                                                                    id="price"
-                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.price && input_error_classes)}
-                                                                />
-                                                                {errors.price && <div
-                                                                    className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                                                    <ExclamationCircleIcon
-                                                                        className="h-5 w-5 text-red-500"
-                                                                        aria-hidden="true"/>
-                                                                </div>}
-                                                            </div>
-                                                            {errors.price &&
-                                                                <p className="mt-2 text-sm text-red-600"
-                                                                   id="email-error">
-                                                                    {errors.price.message}
-                                                                </p>}
-                                                        </div>
-
-                                                        <Controller name={'brand'} control={control}
-                                                                    render={({field}) =>
-                                                                        <div>
-                                                                            <label htmlFor="brand"
-                                                                                   className="block text-sm font-medium leading-6 text-gray-900">
-                                                                                Brand
-                                                                            </label>
-                                                                            <div
-                                                                                className="relative mt-2 rounded-md shadow-sm">
-                                                                                <input
-                                                                                    type="text"
-                                                                                    {...field}
-                                                                                    id="brand"
-                                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.brand && input_error_classes)}
-                                                                                />
-                                                                                {errors.brand && <div
-                                                                                    className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                                                                    <ExclamationCircleIcon
-                                                                                        className="h-5 w-5 text-red-500"
-                                                                                        aria-hidden="true"/>
-                                                                                </div>}
-                                                                            </div>
-                                                                            {errors.brand &&
-                                                                                <p className="mt-2 text-sm text-red-600"
-                                                                                   id="email-error">
-                                                                                    {errors.brand.message}
-                                                                                </p>}
+                                                        <Controller control={control} name={"lName"}
+                                                                    render={({field}) => <div>
+                                                                        <label htmlFor="lName"
+                                                                               className="block text-sm font-medium leading-6 text-gray-900">
+                                                                            Last Name
+                                                                        </label>
+                                                                        <div
+                                                                            className="relative mt-2 rounded-md shadow-sm">
+                                                                            <input
+                                                                                type="text"
+                                                                                {...field}
+                                                                                id="lName"
+                                                                                className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:outline-0 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.lName && input_error_classes)}
+                                                                            />
+                                                                            {errors.lName && <div
+                                                                                className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                                                <ExclamationCircleIcon
+                                                                                    className="h-5 w-5 text-red-500"
+                                                                                    aria-hidden="true"/>
+                                                                            </div>}
                                                                         </div>
-                                                                    }/>
+                                                                        {errors.lName &&
+                                                                            <p className="mt-2 text-sm text-red-600"
+                                                                               id="email-error">
+                                                                                {errors.lName.message}
+                                                                            </p>}
+                                                                    </div>}
+                                                        />
 
-                                                        <div>
-                                                            <label htmlFor="stock"
-                                                                   className="block text-sm font-medium leading-6 text-gray-900">
-                                                                Stock
-                                                            </label>
-                                                            <div
-                                                                className="relative mt-2 rounded-md shadow-sm">
-                                                                <input
-                                                                    type="number"
-                                                                    {...register("stock", {valueAsNumber: true})}
-                                                                    id="stock"
-                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.brand && input_error_classes)}
-                                                                />
-                                                                {errors.stock && <div
-                                                                    className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                                                    <ExclamationCircleIcon
-                                                                        className="h-5 w-5 text-red-500"
-                                                                        aria-hidden="true"/>
-                                                                </div>}
-                                                            </div>
-                                                            {errors.stock &&
-                                                                <p className="mt-2 text-sm text-red-600"
-                                                                   id="email-error">
-                                                                    {errors.stock.message}
-                                                                </p>}
-                                                        </div>
-
-                                                        <Controller name={'thumbnail'} control={control}
-                                                                    render={({field}) =>
-                                                                        <div className={'mt-2'}>
-                                                                            <label htmlFor="thumbnail"
-                                                                                   className="block text-sm font-medium leading-6 text-gray-900">
-                                                                                Thumbnail
-                                                                            </label>
-                                                                            <div
-                                                                                className="relative mt-2 rounded-md shadow-sm">
-                                                                                <input
-                                                                                    type="url"
-                                                                                    {...field}
-                                                                                    id="thumbnail"
-                                                                                    className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.thumbnail && input_error_classes)}
-                                                                                />
-                                                                                {errors.thumbnail && <div
-                                                                                    className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                                                                    <ExclamationCircleIcon
-                                                                                        className="h-5 w-5 text-red-500"
-                                                                                        aria-hidden="true"/>
-                                                                                </div>}
-                                                                            </div>
-                                                                            {errors.thumbnail &&
-                                                                                <p className="mt-2 text-sm text-red-600"
-                                                                                   id="email-error">
-                                                                                    {errors.thumbnail.message}
-                                                                                </p>}
+                                                        <Controller control={control} name={"email"}
+                                                                    render={({field}) => <div>
+                                                                        <label htmlFor="email"
+                                                                               className="block text-sm font-medium leading-6 text-gray-900">
+                                                                            Email
+                                                                        </label>
+                                                                        <div
+                                                                            className="relative mt-2 rounded-md shadow-sm">
+                                                                            <input
+                                                                                type="text"
+                                                                                {...field}
+                                                                                id="email"
+                                                                                className={className(`block w-full min-w-[20rem] px-2 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:outline-0 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`, errors.email && input_error_classes)}
+                                                                            />
+                                                                            {errors.email && <div
+                                                                                className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                                                <ExclamationCircleIcon
+                                                                                    className="h-5 w-5 text-red-500"
+                                                                                    aria-hidden="true"/>
+                                                                            </div>}
                                                                         </div>
-                                                                    }/>
-
+                                                                        {errors.email &&
+                                                                            <p className="mt-2 text-sm text-red-600"
+                                                                               id="email-error">
+                                                                                {errors.email.message}
+                                                                            </p>}
+                                                                    </div>}
+                                                        />
 
                                                     </div>
+
+
                                                     <div
                                                         className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
 

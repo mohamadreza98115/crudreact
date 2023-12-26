@@ -6,10 +6,10 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import ErrorPage from "./error-page.jsx";
 import EmployeesList from "./Components/employee/EmployeesList.jsx";
 import DepartmentsList from "./Components/Department/DepartmentsList.jsx";
-import EmployeeDetail from "./Components/employee/EmployeeDetail.jsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import DepartmentDetail from "./Components/Department/DepartmentDetail.jsx";
 import Dashborad from "./Components/Dashborad.jsx";
+import EditEmployee from "./Components/employee/EditEmployee.jsx";
 
 const client = new QueryClient();
 
@@ -29,14 +29,14 @@ const router = createBrowserRouter([
             },
             {
                 path: "/employees/:employeeId",
-                element: <EmployeeDetail/>
+                element: <EditEmployee/>
             },
             {
                 path: "/departments",
                 element: <DepartmentsList/>
             },
             {
-                path: "/departments:departmentId",
+                path: "/departments/:departmentId",
                 element: <DepartmentDetail/>
             }
         ]
